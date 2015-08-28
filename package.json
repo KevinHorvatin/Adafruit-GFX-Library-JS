@@ -1,0 +1,32 @@
+{
+  "name": "adafruit-gfx-js",
+  "version": "1.0.0",
+  "description": "Port of Adafruit arduino library for use with Tessel",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinHorvatin/Adafruit-GFX-Library-JS.git"
+  },
+  "keywords": [
+    "adafruit",
+    "358",
+    "TFT",
+    "GFX"
+  ],
+  "author": "kevin@horvatin.net",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KevinHorvatin/Adafruit-GFX-Library-JS/issues"
+  },
+  "homepage": "https://github.com/KevinHorvatin/Adafruit-GFX-Library-JS#readme",
+  "dependencies": {
+    "chai": "^3.2.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-mocha": "^2.1.3"
+  }
+}
