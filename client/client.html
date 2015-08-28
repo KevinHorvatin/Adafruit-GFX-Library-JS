@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript">
+        var module = {};
+        var screen = null; 
+        
+        var drawCircle = function() {
+            console.log('ugh');
+            
+            if (screen===null) {
+                screen = new CanvasGFX('screen');
+            }
+            
+            screen.drawCircle({x: 150, y: 150}, 60, 'blue');
+        };
+        var fillCircle = function() {
+            if (screen === null) {
+                screen = new CanvasGFX('screen');                
+            }
+            screen.fillCircle({x: 150, y: 150}, 59, 'red');    
+        }
+        </script>
+        <script src="../js/gfx.js"></script>
+        <script src="canvasGfx.js"></script>
+        
+    </head>
+    <body>
+        <button id="drawCircle" onclick="drawCircle()">Draw a DAMN Circle!</button><br>
+        <button id="fillCircle" onclick="fillCircle()">FILL IT UP</button><br>
+        <canvas id="screen" width="300" height="300"></canvas>
+    </body>
+</html>

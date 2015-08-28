@@ -22,6 +22,20 @@ describe("GFX", function() {
            var subClass = new GFXSub();
            subClass.drawCircle({x:10, y:10}, 3);
            subClass.funCount.should.equal(20);
-       }) 
+       });
+   });
+   describe(".fillCircle()", function() {
+      it('should call drawPixel n times', function() {
+           var subClass = new GFXSub();
+           subClass.fillCircle({x:10, y:10}, 3);
+           subClass.funCount.should.equal(47);
+      });
+   });
+   describe(".fillRoundRect()", function() {
+      it('should call drawPixel n times', function() {
+           var subClass = new GFXSub();
+           subClass.fillRoundRect(10, 10, 3);
+           subClass.funCount.should.equal(47);
+      });
    });
 });

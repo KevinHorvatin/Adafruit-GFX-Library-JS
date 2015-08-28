@@ -58,7 +58,7 @@ GFX.prototype.drawPixel = function() {
 	console.log('Implement in subclass');
 }
 
-GFX.prototype.drawCircle = function(rect0, r, color) {
+GFX.prototype.drawCircle = function(point0, r, color) {
 	console.log('drawCircle');
 	var f = 1 - r;
 	var ddF_x = 1;
@@ -66,10 +66,10 @@ GFX.prototype.drawCircle = function(rect0, r, color) {
 	var x = 0;
 	var y = r;
 	
-	this.drawPixel(rect0.x, rect0.y+r, color);
-  	this.drawPixel(rect0.x  , rect0.y-r, color);
-  	this.drawPixel(rect0.x+r, rect0.y  , color);
-  	this.drawPixel(rect0.x-r, rect0.y  , color);
+	this.drawPixel(point0.x, point0.y+r, color);
+  	this.drawPixel(point0.x  , point0.y-r, color);
+  	this.drawPixel(point0.x+r, point0.y  , color);
+  	this.drawPixel(point0.x-r, point0.y  , color);
 	
 	while (x < y) {
 		if (f >= 0) {
@@ -81,18 +81,18 @@ GFX.prototype.drawCircle = function(rect0, r, color) {
 		ddF_x += 2;
 		f += ddF_x;
 	
-		this.drawPixel(rect0.x + x, rect0.y + y, color);
-		this.drawPixel(rect0.x - x, rect0.y + y, color);
-		this.drawPixel(rect0.x + x, rect0.y - y, color);
-		this.drawPixel(rect0.x - x, rect0.y - y, color);
-		this.drawPixel(rect0.x + y, rect0.y + x, color);
-		this.drawPixel(rect0.x - y, rect0.y + x, color);
-		this.drawPixel(rect0.x + y, rect0.y - x, color);
-		this.drawPixel(rect0.x - y, rect0.y - x, color);
+		this.drawPixel(point0.x + x, point0.y + y, color);
+		this.drawPixel(point0.x - x, point0.y + y, color);
+		this.drawPixel(point0.x + x, point0.y - y, color);
+		this.drawPixel(point0.x - x, point0.y - y, color);
+		this.drawPixel(point0.x + y, point0.y + x, color);
+		this.drawPixel(point0.x - y, point0.y + x, color);
+		this.drawPixel(point0.x + y, point0.y - x, color);
+		this.drawPixel(point0.x - y, point0.y - x, color);
 	}
 }
 
-GFX.prototype.drawCircleHelper = function(rect0, r, cornername, color) {
+GFX.prototype.drawCircleHelper = function(point0, r, cornername, color) {
   var f     = 1 - r;
   var ddF_x = 1;
   var ddF_y = -2 * r;
@@ -109,33 +109,31 @@ GFX.prototype.drawCircleHelper = function(rect0, r, cornername, color) {
     ddF_x += 2;
     f     += ddF_x;
     if (cornername & 0x4) {
-      this.drawPixel(rect0.x + x, rect0.y + y, color);
-      this.drawPixel(rect0.x + y, rect0.y + x, color);
+      this.drawPixel(point0.x + x, point0.y + y, color);
+      this.drawPixel(point0.x + y, point0.y + x, color);
     } 
     if (cornername & 0x2) {
-      this.drawPixel(rect0.x + x, rect0.y - y, color);
-      this.drawPixel(rect0.x + y, rect0.y - x, color);
+      this.drawPixel(point0.x + x, point0.y - y, color);
+      this.drawPixel(point0.x + y, point0.y - x, color);
     }
     if (cornername & 0x8) {
-      this.drawPixel(rect0.x - y, rect0.y + x, color);
-      this.drawPixel(rect0.x - x, rect0.y + y, color);
+      this.drawPixel(point0.x - y, point0.y + x, color);
+      this.drawPixel(point0.x - x, point0.y + y, color);
     }
     if (cornername & 0x1) {
-      this.drawPixel(rect0.x - y, rect0.y - x, color);
-      this.drawPixel(rect0.x - x, rect0.y - y, color);
+      this.drawPixel(point0.x - y, point0.y - x, color);
+      this.drawPixel(point0.x - x, point0.y - y, color);
     }
   }
 }
 
-GFX.prototype.fillCircle = function(rect0, r, color) {
-  this.drawFastVLine(rect0.x, rect0.y-r, 2*r+1, color);
-  this.fillCircleHelper(rect0.x, rect0.y, r, 3, 0, color);
+GFX.prototype.fillCircle = function(point0, r, color) {
+  this.drawFastVLine(point0.x, point0.y-r, 2*r+1, color);
+  this.fillCircleHelper(point0, r, 3, 0, color);
 }
 
 // Used to do circles and roundrects
- GFX.prototype.fillCircleHelper = function( rect0,  r,
-     cornername,  delta,  color) {
-
+ GFX.prototype.fillCircleHelper = function( point0,  r, cornername,  delta,  color) {
   var f     = 1 - r;
   var ddF_x = 1;
   var ddF_y = -2 * r;
@@ -153,51 +151,67 @@ GFX.prototype.fillCircle = function(rect0, r, color) {
     f     += ddF_x;
 
     if (cornername & 0x1) {
-      this.drawFastVLine(rect0.x+x, rect0.y-y, 2*y+1+delta, color);
-      this.drawFastVLine(rect0.x+y, rect0.y-x, 2*x+1+delta, color);
+      this.drawFastVLine(point0.x+x, point0.y-y, 2*y+1+delta, color);
+      this.drawFastVLine(point0.x+y, point0.y-x, 2*x+1+delta, color);
     }
-    if (cornername & 0x2.y) {
-      this.drawFastVLine(rect0.x-x, rect0.y-y, 2*y+1+delta, color);
-      this.drawFastVLine(rect0.x-y, rect0.y-x, 2*x+1+delta, color);
+    if (cornername & 0x2) {
+      this.drawFastVLine(point0.x-x, point0.y-y, 2*y+1+delta, color);
+      this.drawFastVLine(point0.x-y, point0.y-x, 2*x+1+delta, color);
     }
   }
 }
-
-// Bresenham's algorithm - thx wikpedia
- GFX.prototype.drawLine = function(rect0, rect1, color) {
-  var steep = abs(rect1.y - rect0.y) > abs(rect1.x - rect0.x);
+ 
+ // Bresenham's algorithm - thx wikpedia
+ GFX.prototype.drawLine = function(point0, point1, color) {
+  var steep = Math.abs(point1.y - point0.y) > Math.abs(point1.x - point0.x);
+  var x0, y0, x1, y1;
+  x0 = point0.x;
+  y0 = point0.y;
+  x1 = point1.x;
+  y1 = point1.y;
+  
   if (steep) {
-    swap(rect0.x, rect0.y);
-    swap(rect1.x, rect1.y);
+    // Swap x and y coordinates
+    x0 = point0.y;
+    y0 = point0.x;
+    
+    x1 = point1.y;
+    y1 = point1.x;
   }
 
-  if (rect0.x > rect1.x) {
-    swap(rect0.x, rect1.x);
-    swap(rect0.y, rect1.y);
+  if (x0 > x1) {
+    var tmp;
+    tmp = x0;
+    x0 = x1;
+    x1 = tmp;
+    
+    tmp = y0;
+    y0 = y1;
+    y1 = tmp;
   }
 
   var dx, dy;
-  dx = rect1.x - rect0.x;
-  dy = abs(rect1.y - rect0.y);
+  dx = x1 - x0;
+  dy = Math.abs(y1 - y0);
 
   var err = dx / 2;
   var ystep;
 
-  if (rect0.y < rect1.y) {
+  if (y0 <= y1) {
     ystep = 1;
   } else {
     ystep = -1;
   }
 
-  for (; rect0.x<=rect1.x; rect0.x++) {
+  for (; x0<=x1; x0++) {
     if (steep) {
-      this.drawPixel(rect0.y, rect0.x, color);
+      this.drawPixel(y0, x0, color);
     } else {
-      this.drawPixel(rect0.x, rect0.y, color);
+      this.drawPixel(x0, y0, color);
     }
     err -= dy;
     if (err < 0) {
-      rect0.y += ystep;
+      y0 += ystep;
       err += dx;
     }
   }
@@ -216,13 +230,13 @@ GFX.prototype.fillCircle = function(rect0, r, color) {
  GFX.prototype.drawFastVLine = function ( x,  y,
 				  h,  color) {
   // Update in subclasses if desired!
-  drawLine(x, y, x, y+h-1, color);
+  this.drawLine({x: x, y: y}, {x: x, y: y+h-1}, color);
 }
 
  GFX.prototype.drawFastHLine = function ( x,  y,
 				  w,  color) {
   // Update in subclasses if desired!
-  drawLine(x, y, x+w-1, y, color);
+  this.drawLine({x: x, y: y}, {x: x+w-1, y: y}, color);
 }
 
  GFX.prototype.fillRect = function ( x,  y,  w,  h,
@@ -259,89 +273,104 @@ GFX.prototype.fillCircle = function(rect0, r, color) {
   this.fillRect(x+r, y, w-2*r, h, color);
 
   // draw four corners
-  fillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, color);
-  fillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, color);
+  this.fillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, color);
+  this.fillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, color);
 }
 
 // Draw a triangle
- GFX.prototype.drawTriangle = function ( rect0, rect1, rect2,  color) {
-  drawLine(rect0.x, rect0.y, rect1.x, rect1.y, color);
-  drawLine(rect1.x, rect1.y, rect2.y, rect2.y, color);
-  drawLine(rect2.y, rect2.y, rect0.x, rect0.y, color);
+ GFX.prototype.drawTriangle = function ( point0, point1, point2,  color) {
+  this.drawLine(point0.x, point0.y, point1.x, point1.y, color);
+  this.drawLine(point1.x, point1.y, point2.y, point2.y, color);
+  this.drawLine(point2.y, point2.y, point0.x, point0.y, color);
 }
 
 // Fill a triangle
- GFX.prototype.fillTriangle  = function (  rect0, rect1, rect2,  color) {
+ GFX.prototype.fillTriangle  = function (  point0, point1, point2,  color) {
 
   var a, b, y, last;
+  var x0, y0, x1, y1, x2, y2;
+  
+  // Sort coordinates by Y order (point2.y >= point1.y >= point0.y)
+  if (point0.y > point1.y) {
+    y0 = point1.y;
+    y1 = point0.y;
+    x0 = point1.x;
+    x1 = point0.x;
+  }
+  if (point1.y > point2.y) {
+    y1 = point1.y;
+    y2 = point2.y;
+    x1 = 
+    swap(point2.y, point1.y); swap(point2.y, point1.x);
+  }
+  if (point0.y > point1.y) {
+    swap(point0.y, point1.y); swap(point0.x, point1.x);
+  }
 
-  // Sort coordinates by Y order (rect2.y >= rect1.y >= rect0.y)
-  if (rect0.y > rect1.y) {
-    swap(rect0.y, rect1.y); swap(rect0.x, rect1.x);
-  }
-  if (rect1.y > rect2.y) {
-    swap(rect2.y, rect1.y); swap(rect2.y, rect1.x);
-  }
-  if (rect0.y > rect1.y) {
-    swap(rect0.y, rect1.y); swap(rect0.x, rect1.x);
-  }
-
-  if(rect0.y == rect2.y) { // Handle awkward all-on-same-line case as its own thing
-    a = b = rect0.x;
-    if(rect1.x < a)      a = rect1.x;
-    else if(rect1.x > b) b = rect1.x;
-    if(rect2.y < a)      a = rect2.y;
-    else if(rect2.y > b) b = rect2.y;
-    this.drawFastHLine(a, rect0.y, b-a+1, color);
+  if(point0.y == point2.y) { // Handle awkward all-on-same-line case as its own thing
+    a = b = point0.x;
+    if(point1.x < a)      a = point1.x;
+    else if(point1.x > b) b = point1.x;
+    if(point2.y < a)      a = point2.y;
+    else if(point2.y > b) b = point2.y;
+    this.drawFastHLine(a, point0.y, b-a+1, color);
     return;
   }
 
   var
-    dx01 = rect1.x - rect0.x,
-    dy01 = rect1.y - rect0.y,
-    dx02 = rect2.y - rect0.x,
-    dy02 = rect2.y - rect0.y,
-    dx12 = rect2.y - rect1.x,
-    dy12 = rect2.y - rect1.y,
+    dx01 = point1.x - point0.x,
+    dy01 = point1.y - point0.y,
+    dx02 = point2.y - point0.x,
+    dy02 = point2.y - point0.y,
+    dx12 = point2.y - point1.x,
+    dy12 = point2.y - point1.y,
     sa   = 0,
     sb   = 0;
 
   // For upper part of triangle, find scanline crossings for segments
-  // 0-1 and 0-2.  If rect1.y=rect2.y (flat-bottomed triangle), the scanline rect1.y
+  // 0-1 and 0-2.  If point1.y=point2.y (flat-bottomed triangle), the scanline point1.y
   // is included here (and second loop will be skipped, avoiding a /0
-  // error there), otherwise scanline rect1.y is skipped here and handled
-  // in the second loop...which also avoids a /0 error here if rect0.y=rect1.y
+  // error there), otherwise scanline point1.y is skipped here and handled
+  // in the second loop...which also avoids a /0 error here if point0.y=point1.y
   // (flat-topped triangle).
-  if(rect1.y == rect2.y) last = rect1.y;   // Include rect1.y scanline
-  else         last = rect1.y-1; // Skip it
+  if(point1.y == point2.y) last = point1.y;   // Include point1.y scanline
+  else         last = point1.y-1; // Skip it
 
-  for(y=rect0.y; y<=last; y++) {
-    a   = rect0.x + sa / dy01;
-    b   = rect0.x + sb / dy02;
+  for(y=point0.y; y<=last; y++) {
+    a   = point0.x + sa / dy01;
+    b   = point0.x + sb / dy02;
     sa += dx01;
     sb += dx02;
     /* longhand:
-    a = x0 + (x1 - x0) * (y - rect0.y) / (rect1.y - rect0.y);
-    b = x0 + (rect2.y - x0) * (y - rect0.y) / (rect2.y - rect0.y);
+    a = x0 + (x1 - x0) * (y - point0.y) / (point1.y - point0.y);
+    b = x0 + (point2.y - x0) * (y - point0.y) / (point2.y - point0.y);
     */
-    if(a > b) swap(a,b);
+    if(a > b) {
+      var tmp = a;
+      a = b;
+      b = tmp;
+    }
     this.drawFastHLine(a, y, b-a+1, color);
   }
 
   // For lower part of triangle, find scanline crossings for segments
-  // 0-2 and 1-2.  This loop is skipped if rect1.y=rect2.y.
-  sa = dx12 * (y - rect1.y);
-  sb = dx02 * (y - rect0.y);
-  for(; y<=rect2.y; y++) {
-    a   = rect1.x + sa / dy12;
-    b   = rect0.x + sb / dy02;
+  // 0-2 and 1-2.  This loop is skipped if point1.y=point2.y.
+  sa = dx12 * (y - point1.y);
+  sb = dx02 * (y - point0.y);
+  for(; y<=point2.y; y++) {
+    a   = point1.x + sa / dy12;
+    b   = point0.x + sb / dy02;
     sa += dx12;
     sb += dx02;
     /* longhand:
-    a = x1 + (rect2.y - x1) * (y - rect1.y) / (rect2.y - rect1.y);
-    b = x0 + (rect2.y - x0) * (y - rect0.y) / (rect2.y - rect0.y);
+    a = x1 + (point2.y - x1) * (y - point1.y) / (point2.y - point1.y);
+    b = x0 + (point2.y - x0) * (y - point0.y) / (point2.y - point0.y);
     */
-    if(a > b) swap(a,b);
+    if(a > b) {
+      var tmp = a;
+      a = b;
+      b = tmp;
+    }
     this.drawFastHLine(a, y, b-a+1, color);
   }
 }
@@ -407,9 +436,9 @@ GFX.prototype.fillCircle = function(rect0, r, color) {
   } else if (c == '\r') {
     // skip em
   } else {
-    drawChar(this.cursor.x, this.cursor.y, c, textcolor, textbgcolor, this.textSize);
+    this.drawChar(this.cursor.x, this.cursor.y, c, textcolor, textbgcolor, this.textSize);
     this.cursor.x += this.textSize*6;
-    if (wrap && (this.cursor.x > (this.width - this.textSize*6))) {
+    if (this.wrap && (this.cursor.x > (this.width - this.textSize*6))) {
       this.cursor.y += this.textSize*8;
       this.cursor.x = 0;
     }
@@ -474,25 +503,25 @@ GFX.prototype.fillCircle = function(rect0, r, color) {
  GFX.prototype.setTextColor = function ( c) {
   // For 'transparent' background, we'll set the bg 
   // to the same as fg instead of using a flag
-  textcolor = textbgcolor = c;
+  this.textcolor = this.textbgcolor = c;
 }
 
  GFX.prototype.setTextColor = function ( c,  b) {
-  textcolor   = c;
-  textbgcolor = b; 
+  this.textcolor   = c;
+  this.textbgcolor = b; 
 }
 
  GFX.prototype.setTextWrap = function (w) {
-  wrap = w;
+  this.wrap = w;
 }
 
  GFX.prototype.getRotation = function () {
-  return rotation;
+  return this.rotation;
 }
 
  GFX.prototype.setRotation = function (x) {
-  rotation = (x & 3);
-  switch(rotation) {
+  this.rotation = (x & 3);
+  switch(this.rotation) {
    case 0:
    case 2:
     this.width  = this.WIDTH;

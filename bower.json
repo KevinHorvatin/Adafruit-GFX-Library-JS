@@ -1,8 +1,0 @@
-{
-  "name": "Adafruit-GFX-Library-JS",
-  "version": "0.0.1",
-  "description": "Port of Adafruit-GFX-Library",
-  "dependencies": {
-    "requirejs": "~2.1.20"
-  }
-}
