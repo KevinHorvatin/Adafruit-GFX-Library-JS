@@ -227,33 +227,29 @@ GFX.prototype.fillCircle = function(point0, r, color) {
   this.drawFastVLine(x+w-1, y, h, color);
 }
 
- GFX.prototype.drawFastVLine = function ( x,  y,
-				  h,  color) {
+ GFX.prototype.drawFastVLine = function (x,  y, h,  color) {
   // Update in subclasses if desired!
   this.drawLine({x: x, y: y}, {x: x, y: y+h-1}, color);
 }
 
- GFX.prototype.drawFastHLine = function ( x,  y,
-				  w,  color) {
+ GFX.prototype.drawFastHLine = function (x,  y, w, color) {
   // Update in subclasses if desired!
   this.drawLine({x: x, y: y}, {x: x+w-1, y: y}, color);
 }
 
- GFX.prototype.fillRect = function ( x,  y,  w,  h,
-			     color) {
+ GFX.prototype.fillRect = function (x,  y,  w,  h, color) {
   // Update in subclasses if desired!
   for (var i=x; i<x+w; i++) {
     this.drawFastVLine(i, y, h, color);
   }
 }
 
- GFX.prototype.fillScreen = function ( color) {
+ GFX.prototype.fillScreen = function (color) {
   this.fillRect(0, 0, this.width, this.height, color);
 }
 
 // Draw a rounded rectangle
- GFX.prototype.drawRoundRect = function ( x,  y,  w,
-   h,  r,  color) {
+ GFX.prototype.drawRoundRect = function (x, y, w, h, r, color) {
   // smarter version
   this.drawFastHLine(x+r  , y    , w-2*r, color); // Top
   this.drawFastHLine(x+r  , y+h-1, w-2*r, color); // Bottom
@@ -267,63 +263,77 @@ GFX.prototype.fillCircle = function(point0, r, color) {
 }
 
 // Fill a rounded rectangle
- GFX.prototype.fillRoundRect = function ( x,  y,  w,
-				  h,  r,  color) {
+ GFX.prototype.fillRoundRect = function (x, y, w, h, r, color) {
   // smarter version
   this.fillRect(x+r, y, w-2*r, h, color);
 
   // draw four corners
-  this.fillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, color);
-  this.fillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, color);
+  this.fillCircleHelper({x: x+w-r-1,y: y+r}, r, 1, h-2*r-1, color);
+  this.fillCircleHelper({x: x+r, y: y+r}, r, 2, h-2*r-1, color);
 }
 
 // Draw a triangle
- GFX.prototype.drawTriangle = function ( point0, point1, point2,  color) {
-  this.drawLine(point0.x, point0.y, point1.x, point1.y, color);
-  this.drawLine(point1.x, point1.y, point2.y, point2.y, color);
-  this.drawLine(point2.y, point2.y, point0.x, point0.y, color);
+ GFX.prototype.drawTriangle = function (point0, point1, point2, color) {
+  this.drawLine(point0, point1, color);
+  this.drawLine(point1, point2, color);
+  this.drawLine(point2, point0, color);
 }
 
 // Fill a triangle
  GFX.prototype.fillTriangle  = function (  point0, point1, point2,  color) {
-
   var a, b, y, last;
   var x0, y0, x1, y1, x2, y2;
   
+  x0 = point0.x;
+  x1 = point1.x;
+  x2 = point2.x;
+  y0 = point0.y;
+  y1 = point1.y;
+  y2 = point2.y;
+  
   // Sort coordinates by Y order (point2.y >= point1.y >= point0.y)
-  if (point0.y > point1.y) {
+  if (y0 > y1) {
     y0 = point1.y;
     y1 = point0.y;
     x0 = point1.x;
     x1 = point0.x;
   }
-  if (point1.y > point2.y) {
-    y1 = point1.y;
-    y2 = point2.y;
-    x1 = 
-    swap(point2.y, point1.y); swap(point2.y, point1.x);
+  if (y1 > y2) {
+    var tmp = y1;
+    y1 = y2;
+    y2 = tmp;
+    
+    tmp = x1;
+    x1 = x2;
+    x2 = tmp;
   }
-  if (point0.y > point1.y) {
-    swap(point0.y, point1.y); swap(point0.x, point1.x);
+  if (y0 > y1) {
+    var tmp = y1;
+    y1 = y0;
+    y0 = tmp;
+    
+    tmp = x1;
+    x1 = x0;
+    x0 = tmp;
   }
 
-  if(point0.y == point2.y) { // Handle awkward all-on-same-line case as its own thing
-    a = b = point0.x;
-    if(point1.x < a)      a = point1.x;
-    else if(point1.x > b) b = point1.x;
-    if(point2.y < a)      a = point2.y;
-    else if(point2.y > b) b = point2.y;
-    this.drawFastHLine(a, point0.y, b-a+1, color);
+  if(y0 == y2) { // Handle awkward all-on-same-line case as its own thing
+    a = b = x0;
+    if(x1 < a)      a = x1;
+    else if(x1 > b) b = x1;
+    if(y2 < a)      a = y2;
+    else if(y2 > b) b = y2;
+    this.drawFastHLine(a, y0, b-a+1, color);
     return;
   }
 
   var
-    dx01 = point1.x - point0.x,
-    dy01 = point1.y - point0.y,
-    dx02 = point2.y - point0.x,
-    dy02 = point2.y - point0.y,
-    dx12 = point2.y - point1.x,
-    dy12 = point2.y - point1.y,
+    dx01 = x1 - x0,
+    dy01 = y1 - y0,
+    dx02 = y2 - x0,
+    dy02 = y2 - y0,
+    dx12 = y2 - x1,
+    dy12 = y2 - y1,
     sa   = 0,
     sb   = 0;
 
@@ -333,12 +343,12 @@ GFX.prototype.fillCircle = function(point0, r, color) {
   // error there), otherwise scanline point1.y is skipped here and handled
   // in the second loop...which also avoids a /0 error here if point0.y=point1.y
   // (flat-topped triangle).
-  if(point1.y == point2.y) last = point1.y;   // Include point1.y scanline
-  else         last = point1.y-1; // Skip it
+  if(y1 == y2) last = y1;   // Include point1.y scanline
+  else         last = y1-1; // Skip it
 
-  for(y=point0.y; y<=last; y++) {
-    a   = point0.x + sa / dy01;
-    b   = point0.x + sb / dy02;
+  for(y=y0; y<=last; y++) {
+    a   = x0 + sa / dy01;
+    b   = x0 + sb / dy02;
     sa += dx01;
     sb += dx02;
     /* longhand:
@@ -355,11 +365,11 @@ GFX.prototype.fillCircle = function(point0, r, color) {
 
   // For lower part of triangle, find scanline crossings for segments
   // 0-2 and 1-2.  This loop is skipped if point1.y=point2.y.
-  sa = dx12 * (y - point1.y);
-  sb = dx02 * (y - point0.y);
-  for(; y<=point2.y; y++) {
-    a   = point1.x + sa / dy12;
-    b   = point0.x + sb / dy02;
+  sa = dx12 * (y - y1);
+  sb = dx02 * (y - y0);
+  for(; y<=y2; y++) {
+    a   = x1 + sa / dy12;
+    b   = x0 + sb / dy02;
     sa += dx12;
     sb += dx02;
     /* longhand:
@@ -560,4 +570,3 @@ GFX.prototype.fillCircle = function(point0, r, color) {
 }
 
 module.exports = GFX;
-

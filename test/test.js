@@ -34,8 +34,29 @@ describe("GFX", function() {
    describe(".fillRoundRect()", function() {
       it('should call drawPixel n times', function() {
            var subClass = new GFXSub();
-           subClass.fillRoundRect(10, 10, 3);
-           subClass.funCount.should.equal(47);
+           subClass.fillRoundRect(10, 10, 10, 10, 3, "blue");
+           subClass.funCount.should.equal(104);
+      });
+   });
+   describe(".fillRect()", function() {
+      it('should call drawPixel n times', function() {
+           var subClass = new GFXSub();
+           subClass.fillRect(10, 10, 10, 15, "blue");
+           subClass.funCount.should.equal(150);
+      });
+   });
+   describe(".drawTriangle()", function() {
+      it('should call drawPixel n times', function() {
+           var subClass = new GFXSub();
+           subClass.drawTriangle({x:1, y:1}, {x:10,y:10}, {x:20,y:20}, "blue");
+           subClass.funCount.should.equal(41);
+      });
+   });
+   describe(".fillTriangle()", function() {
+      it('should call drawPixel n times', function() {
+           var subClass = new GFXSub();
+           subClass.fillTriangle({x:1, y:4}, {x:3,y:1}, {x:4,y:4}, "blue");
+           subClass.funCount.should.equal(10);
       });
    });
 });

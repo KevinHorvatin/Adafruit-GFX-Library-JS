@@ -4,21 +4,10 @@
         <script type="text/javascript">
         var module = {};
         var screen = null; 
-        
-        var drawCircle = function() {
-            console.log('ugh');
-            
+        var init = function() {
             if (screen===null) {
                 screen = new CanvasGFX('screen');
             }
-            
-            screen.drawCircle({x: 150, y: 150}, 60, 'blue');
-        };
-        var fillCircle = function() {
-            if (screen === null) {
-                screen = new CanvasGFX('screen');                
-            }
-            screen.fillCircle({x: 150, y: 150}, 59, 'red');    
         }
         </script>
         <script src="../js/gfx.js"></script>
@@ -26,8 +15,12 @@
         
     </head>
     <body>
-        <button id="drawCircle" onclick="drawCircle()">Draw a DAMN Circle!</button><br>
-        <button id="fillCircle" onclick="fillCircle()">FILL IT UP</button><br>
         <canvas id="screen" width="300" height="300"></canvas>
+        <button id="drawCircle" onclick="init();screen.drawCircle({x: 150, y: 150}, 60, 'blue');">CIRCLE</button>
+        <button id="fillCircle" onclick="init();screen.fillCircle({x: 150, y: 150}, 59, 'red');">FILLED CIRCLE</button>
+        <button id="fillRoundRect" onclick="init();screen.fillRoundRect(150,150,100,100,25,'grey')">ROUND RECT</button>
+        <button id="fillRect" onclick="init();screen.fillRect(150,150,100,100,'green')">RECT</button>
+        <button id="drawTriangle" onclick="init();screen.drawTriangle({x: 5, y: 5},{x: 5, y: 100},{x: 150, y: 5},'green')">TRIANGLE</button>
+        <button id="fillRect" onclick="init();screen.fillTriangle({x: 5, y: 5},{x: 5, y: 100},{x: 150, y: 5},'purple')">FILLED TRIANGLE</button>
     </body>
 </html>
