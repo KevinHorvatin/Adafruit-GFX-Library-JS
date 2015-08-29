@@ -321,8 +321,8 @@ GFX.prototype.fillCircle = function(point0, r, color) {
     a = b = x0;
     if(x1 < a)      a = x1;
     else if(x1 > b) b = x1;
-    if(y2 < a)      a = y2;
-    else if(y2 > b) b = y2;
+    if(x2 < a)      a = x2;
+    else if(x2 > b) b = x2;
     this.drawFastHLine(a, y0, b-a+1, color);
     return;
   }
@@ -330,9 +330,9 @@ GFX.prototype.fillCircle = function(point0, r, color) {
   var
     dx01 = x1 - x0,
     dy01 = y1 - y0,
-    dx02 = y2 - x0,
+    dx02 = x2 - x0,
     dy02 = y2 - y0,
-    dx12 = y2 - x1,
+    dx12 = x2 - x1,
     dy12 = y2 - y1,
     sa   = 0,
     sb   = 0;
