@@ -23,10 +23,11 @@
   },
   "homepage": "https://github.com/KevinHorvatin/Adafruit-GFX-Library-JS#readme",
   "dependencies": {
-    "chai": "^3.2.0"
+    "bmp-js": "0.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
-    "gulp-mocha": "^2.1.3"
+    "gulp-mocha": "^2.1.3",
+    "chai": "^3.2.0"
   }
 }

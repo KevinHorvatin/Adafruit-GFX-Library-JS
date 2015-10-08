@@ -10,6 +10,7 @@
             }
         }
         </script>
+        <script src="../node_modules/bmp-js/lib/decoder.js">
         <script src="../js/gfx.js"></script>
         <script src="canvasGfx.js"></script>
         
@@ -22,5 +23,10 @@
         <button id="fillRect" onclick="init();screen.fillRect(150,150,100,100,'green')">RECT</button>
         <button id="drawTriangle" onclick="init();screen.drawTriangle({x: 5, y: 5},{x: 5, y: 100},{x: 150, y: 5},'green')">TRIANGLE</button>
         <button id="fillRect" onclick="init();screen.fillTriangle({x: 5, y: 5},{x: 5, y: 100},{x: 150, y: 5},'purple')">FILLED TRIANGLE</button>
+        <input type="file" id="fileElem" accept="image/*" style="display:none" onchange="init(); screen.drawBitmap(0, 0, this.files)">
+      <a href="#" id="fileSelect">Select some files</a> 
+      <div id="fileList">
+        <p>No files selected!</p>
+     </div>
     </body>
 </html>

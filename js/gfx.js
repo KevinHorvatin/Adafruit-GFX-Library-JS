@@ -33,6 +33,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
+//var bmp = require("bmp-js");
 var GFX = function() {
 	this.rotation = 0;
 	this.cursor = {
@@ -385,59 +386,37 @@ GFX.prototype.fillCircle = function(point0, r, color) {
   }
 }
 
- GFX.prototype.drawBitmap = function ( x,  y,
-			       bitmap,  w,  h,
-			       color) {
-
-  var i, j, byteWidth = (w + 7) / 8;
-
+ //
+ // Array is height*width*4 long - 
+ // byte[0] => RED, 
+ // byte[1] => GREEN,
+ // byte[2] => BLUE,
+ // byte[3] => ALPHA
+ //
+ GFX.prototype.drawImageFromArray (x, y, bitmapBuffer, height, width) {
+  var color = 0;
+  var h = bmpObj.height;
+  var w = bmpObj.width;
   for(j=0; j<h; j++) {
     for(i=0; i<w; i++ ) {
-      if(pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) {
+        var location = j * this.width * 4 + i * 4;
+        var red   = bitmapBuffer[location].toString(16);
+        var blue  = bitmapBuffer[location+1].toString(16);
+        var green = bitmapBuffer[location+2].toString(16);
+        var alpha = bitmapBuffer[location+3].toString(16);
+        var color = red + blue + green;
         this.drawPixel(x+i, y+j, color);
-      }
     }
   }
 }
 
-// Draw a 1-bit color bitmap at the specified x, y position from the
-// provided bitmap buffer (must be PROGMEM memory) using color as the
-// foreground color and bg as the background color.
- GFX.prototype.drawBitmap = function ( x,  y,
-             bitmap,  w,  h,
-             color,  bg) {
+ GFX.prototype.drawBitmap = function (x, y, bitmapFname) {
+  //var bmpBuffer = fs.readFileSync(bitmapFname);
+  //var bmpObj = bmp.decode(bmpBuffer);
 
-  var i, j, byteWidth = (w + 7) / 8;
-  
-  for(j=0; j<h; j++) {
-    for(i=0; i<w; i++ ) {
-      if(pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) {
-        this.drawPixel(x+i, y+j, color);
-      }
-      else {
-       this.drawPixel(x+i, y+j, bg);
-      }
-    }
-  }
+  this.drawImageFromArray(x, y, bmpObj.data, bmpObj.height, bmpObj.width);
 }
 
-//Draw XBitMap Files (*.xbm), exported from GIMP,
-//Usage: Export from GIMP to *.xbm, rename *.xbm to *.c and open in editor.
-//C Array can be directly used with this function
- GFX.prototype.drawXBitmap = function ( x,  y,
-                               bitmap,  w,  h,
-                               color) {
-  
-  var i, j, byteWidth = (w + 7) / 8;
-  
-  for(j=0; j<h; j++) {
-    for(i=0; i<w; i++ ) {
-      if(pgm_read_byte(bitmap + j * byteWidth + i / 8) & (1 << (i % 8))) {
-        this.drawPixel(x+i, y+j, color);
-      }
-    }
-  }
-}
 
  GFX.prototype.write = function (c) {
   if (c == '\n') {
